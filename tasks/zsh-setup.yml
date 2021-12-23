@@ -1,0 +1,25 @@
+- name: "Install ZSH"
+  apt: name=zsh
+  tags: &default_tags ["install", "productivity", "dotfiles", "zsh" ]
+
+- name: Change shell to zsh
+  shell: chsh -s $(which zsh)
+  tags: *default_tags
+
+- name: Check that the somefile.conf exists
+  stat:
+    path: ~/.oh-my-zsh
+  register: oh_my_stats
+  tags: *default_tags
+
+- name: Install Oh-My-Zsh
+  shell: sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  tags: *default_tags
+  when: oh_my_stats.stat.exists == False
+  become_user: santiago
+
+- name: Install zsh-autosuggestions
+  ansible.builtin.git:
+    repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+    dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
+  tags: *default_tags

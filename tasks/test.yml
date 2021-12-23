@@ -1,0 +1,12 @@
+- name: "Default variables for ZSH tasks" 
+  shell: echo "Placeholder command, otherwise Ansible ask for an action"
+  vars: &default_tags
+    tags: [ 'install', 'zsh', 'dotfiles', 'zsh' ]
+
+- name: "Install ZSH"
+  apt: name=zsh
+  <<: *default_tags
+
+- name: Change shell to zsh
+  shell: chsh -s $(which zsh)
+  <<: *default_tags
